@@ -89,7 +89,7 @@ public:
 		}
 		Size--;
 	}
-	void insert(T value, int index) {
+	void insert(T value , int index) {
 		if (index > Size || index < 0) {
 			return;
 		}
@@ -112,6 +112,56 @@ public:
 			Size++;
 		}
 	}
+	void erase(int index) {
+		if (index >= Size || index < 0) {
+			return;
+		}
+		if (index == 0) {
+			pop_front();
+		}
+		else if (index == Size - 1) {
+			pop_back();
+		}
+		else {
+			Node* current = head;
+			int currentIndex = 0;
+			while (currentIndex < index - 1) {
+				current = current->pNext;
+				currentIndex++;
+			}
+			Node* tmp = current->pNext;
+			if (tmp == nullptr) return;
+			current->pNext = tmp->pNext;
+			delete tmp;
+			Size--;
+		}
+	}
+	bool find(T value) {
+		Node* current = head;
+		while (current != nullptr) {
+			if (current->data == value) {
+				return true;
+			}
+			current = current->pNext;
+		}
+		return false;
+	}
+	void reverse() {
+		if (head == nullptr) {
+			return;
+		}
+		Node* prev = nullptr;
+		Node* current = head;
+		tail = head;
+		while (current != nullptr) {
+			Node* next = current->pNext;
+			current->pNext = prev;
+			prev = current;
+			current = next;
+		}
+		head = prev;
+		
+	}
 	int size() {
 		return Size;
 	}
@@ -126,6 +176,20 @@ public:
 	~LinkedList() {
 		clear();
 	}
+
+
+	T& operator[] (int index) {
+		if (index > Size - 1 || index < 0) {
+			throw std::out_of_range("Index out of bounds");
+		}
+		Node* current = head;
+		int currentIndex = 0;
+		while (currentIndex != index) {
+			current = current->pNext;
+			currentIndex++;
+		}
+		return current->data;
+	}
 };
 
 
@@ -137,7 +201,8 @@ int main(void) {
 	list.push_back(25);
 	list.insert(32,0);
 	list.insert(255, 4);
-	list.clear();
+	list.reverse();
 	list.display();
+	cout << list[3];
 
 }
